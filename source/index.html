@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Daichi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.min.css" type="text/css">
+</head>
+  <body class="page-body">
+    <div class="menu" id="menu">
+      <div class="menu__container">
+        <form class="menu__form" id="menu-form">
+          <input type="radio" id="size-4" name="fieldSize" value="4" checked>
+          <label for="size-4" class="menu__label">4 Х 4</label>
+          <input type="radio" id="size-6" name="fieldSize" value="6">
+          <label for="size-6" class="menu__label">6 Х 6</label>
+          <input type="radio" id="size-8" name="fieldSize" value="8">
+          <label for="size-8" class="menu__label">8 Х 8</label>
+          <button id="size-submit" type="submit">Старт</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-block" id="card-block">
+
+    </div>
+
+    <div class="card done">
+      <div class="card__content">
+        <div class="card__front"></div>
+        <div class="card__back">
+          <img src="img/road.svg" alt="pic">
+        </div>
+      </div>
+    </div>
+
+    <template id="card">
+      <div class="card">
+        <div class="card__content">
+          <div class="card__front"></div>
+          <div class="card__back">
+            <img class="card__img" src="" alt="pic">
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

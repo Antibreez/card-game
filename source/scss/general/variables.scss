@@ -1,0 +1,19 @@
+//ШРИФТЫ
+$font: "Suisse Intl", "Arial", "Helvetica", "Helvetica CY", "Nimbus Sans";
+
+// РЕТИНА
+$retina-dpi: 144dpi;
+$retina-dppx: 1.5dppx;
+
+//Карточки
+$card-wd: 70px;
+
+// РАЗРЕШЕНИЯ
+$width-desktop-large: 840px;
+$width-desktop: 640px;
+$width-tablet: 480px;
+$width-mobile: 320px;
+
+$card-wrap-4: $card-wd * 5;
+$card-wrap-6: $card-wd * 8;
+$card-wrap-8: $card-wd * 10;

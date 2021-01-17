@@ -1,0 +1,98 @@
+//РАЗРЕШЕНИЯ
+// Меньше 840
+@mixin desktop {
+  @media (max-width: $width-desktop-large - 1px) {
+    @content;
+  }
+}
+
+// Меньше 640
+@mixin tablet {
+  @media (max-width: $width-desktop - 1px) {
+    @content;
+  }
+}
+
+// Меньше 480
+@mixin mobile {
+  @media (max-width: $width-tablet - 1px) {
+    @content;
+  }
+}
+
+// Для карточек 4 Х 4
+@mixin width-card-4 {
+  @media (max-width: $card-wrap-4 - 1px) {
+    @content;
+  }
+}
+
+// Для карточек 6 Х 6
+@mixin width-card-6 {
+  @media (max-width: $card-wrap-6 - 1px) {
+    @content;
+  }
+}
+
+// Для карточек 8 Х 8
+@mixin width-card-8 {
+  @media (max-width: $card-wrap-8 - 1px) {
+    @content;
+  }
+}
+
+
+
+// СБРОС СТИЛЕЙ
+
+@mixin list-reset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@mixin link-reset {
+  text-decoration: none;
+  color: inherit;
+}
+
+// ШРИФТЫ
+@mixin font-face($name, $filename, $weight) {
+  @font-face {
+    font-family: $name;
+    font-weight: $weight;
+    font-style: normal;
+    font-display: swap;
+    src: url('../fonts/'+$filename+'.eot'); /* IE9 Compat Modes */
+    src: local(''),
+      url('../fonts/'+$filename+'.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+      url('../fonts/'+$filename+'.woff') format('woff'), /* Modern Browsers */
+      url('../fonts/'+$filename+'.ttf') format('truetype'), /* Safari, Android, iOS */
+      url('../fonts/'+$filename+'.svg#PlayfairDisplay') format('svg'); /* Legacy iOS */
+  }
+}
+
+// РЕТИНА
+@mixin retina {
+  @media (min-resolution: $retina-dpi), (min-resolution: $retina-dppx) {
+    @content;
+  }
+}
+
+// КОНТЕЙНЕР
+@mixin container {
+  margin: 0 auto;
+  max-width: 840px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @include tablet {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+//ПЛАНВНЫЙ ХОВЕР
+@mixin transition($duration: 0.2s) {
+  transition: all $duration ease;
+}
