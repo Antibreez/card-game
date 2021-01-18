@@ -29,29 +29,32 @@
     margin-bottom: calc(#{$card-wd}/4);
   }
 
-  &.size-6 {
+  &.size-6,
+  &.size-8 {
     max-width: calc(#{$card-wd} * (6 + 5/4));
   }
 
-  &.size-6  .card:not(:nth-child(6n)) {
+  &.size-6  .card:not(:nth-child(6n)),
+  &.size-8  .card:not(:nth-child(6n)) {
     margin-right: calc(#{$card-wd}/4);
   }
 
-  &.size-6  .card {
-    margin-bottom: calc(#{$card-wd}/4);
-  }
-
-  &.size-8 {
-    max-width: calc(#{$card-wd} * (8 + 7/4));
-  }
-
-  &.size-8  .card:not(:nth-child(8n)) {
-    margin-right: calc(#{$card-wd}/4);
-  }
-
+  &.size-6  .card,
   &.size-8  .card {
     margin-bottom: calc(#{$card-wd}/4);
   }
+
+  // &.size-8 {
+  //   max-width: calc(#{$card-wd} * (8 + 7/4));
+  // }
+
+  // &.size-8  .card:not(:nth-child(8n)) {
+  //   margin-right: calc(#{$card-wd}/4);
+  // }
+
+  // &.size-8  .card {
+  //   margin-bottom: calc(#{$card-wd}/4);
+  // }
 }
 
 .card {
@@ -121,35 +124,38 @@
   .card-block {
     justify-content: space-around;
 
-    &.size-6 {
+    &.size-6,
+    &.size-8 {
       max-width: 100%;
     }
 
-    &.size-6  .card:not(:nth-child(6n)) {
+    &.size-6  .card:not(:nth-child(6n)),
+    &.size-8  .card:not(:nth-child(6n)) {
       margin-right: 0;
     }
 
-    &.size-6  .card {
+    &.size-6  .card,
+    &.size-8  .card {
       margin-bottom: 3%;
       width: 15%;
     }
   }
 }
 
-@include width-card-8 {
-  .card-block {
-    justify-content: space-around;
+// @include width-card-8 {
+//   .card-block {
+//     justify-content: space-around;
 
-    &.size-8 {
-      max-width: 100%;
-    }
+//     &.size-8 {
+//       max-width: 100%;
+//     }
 
-    &.size-8  .card:nth-child(n) {
-      margin: 0 1% 2%
-    }
+//     &.size-8  .card:nth-child(n) {
+//       margin: 0 1% 2%
+//     }
 
-    &.size-8  .card {
-      width: 10%;
-    }
-  }
-}
+//     &.size-8  .card {
+//       width: 10%;
+//     }
+//   }
+// }

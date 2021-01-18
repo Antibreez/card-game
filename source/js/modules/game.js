@@ -7,10 +7,6 @@ const $menuForm = document.getElementById(`menu-form`);
 const $sizesRadio = $menuForm.querySelectorAll(`input[name='fieldSize']`);
 const $cardBlock = document.getElementById(`card-block`);
 
-const fs = require('fs');
-const files = fs.readdirSync('../img/');
-console.log(files);
-
 class Game {
   constructor() {
     this.size = 4;
