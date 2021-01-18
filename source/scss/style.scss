@@ -1,6 +1,7 @@
 // vendor
 @import "vendor/normalize.scss";
 @import "vendor/swiper.scss";
+@import "vendor/plyr.scss";
 
 // general
 @import "general/variables.scss";
@@ -11,3 +12,4 @@
 // blocks
 @import "blocks/card.scss";
 @import "blocks/menu.scss";
+@import "blocks/player.scss";

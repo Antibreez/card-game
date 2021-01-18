@@ -1,255 +1,8 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-"use strict";
-
-var _game = _interopRequireDefault(require("./modules/game.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var game = new _game.default();
-
-},{"./modules/game.js":4}],2:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var $cardTemplate = document.getElementById("card").content.querySelector(".card");
-
-var Card = /*#__PURE__*/function () {
-  function Card(name) {
-    _classCallCheck(this, Card);
-
-    this.name = name;
-  }
-
-  _createClass(Card, [{
-    key: "getCard",
-    value: function getCard() {
-      var node = $cardTemplate.cloneNode(true);
-      node.querySelector(".card__img").src = "img/".concat(this.name);
-      return node;
-    }
-  }]);
-
-  return Card;
-}();
-
-var _default = Card;
-exports.default = _default;
-
-},{}],3:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.IMAGES_NAMES = void 0;
-var IMAGES_NAMES = ["apple.svg", "ball.svg", "banana.svg", "cake.svg", "car.svg", "cat.svg", "cloud.svg", "dog.svg", "duck.svg", "earth.svg", "ferris.svg", "frig.svg", "flag.svg", "frog.svg", "hat.svg", "hot-dog.svg", "house.svg", "leaf.svg", "lightning.svg", "moon.svg", "mustache.svg", "rainbow.svg", "road.svg", "rocket.svg", "ship.svg", "smile.svg", "star.svg", "sun.svg", "tree.svg", "t-shirt.svg", "tv-screen.svg", "umbrella.svg"];
-exports.IMAGES_NAMES = IMAGES_NAMES;
-
-},{}],4:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _constants = require("./constants.js");
-
-var _random = require("../utils/random.js");
-
-var _plyr = _interopRequireDefault(require("../modules/plyr.js"));
-
-var _card = _interopRequireDefault(require("./card.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var $menu = document.getElementById("menu");
-var $menuForm = document.getElementById("menu-form");
-var $sizesRadio = $menuForm.querySelectorAll("input[name='fieldSize']");
-var $cardBlock = document.getElementById("card-block");
-var $playerWrap = document.querySelector(".player-wrap");
-var player = new _plyr.default("#player");
-player.on("ended", function () {
-  player.fullscreen.exit();
-});
-var playerWrap = document.querySelector(".player-wrap");
-var play = document.getElementById("play");
-var exit = document.getElementById("exit"); // play.addEventListener('click', () => {
-//   playerWrap.classList.remove(`js-hidden`);
-//   player.fullscreen.enter();
-//   player.play();
-// });
-
-var Game = /*#__PURE__*/function () {
-  function Game() {
-    _classCallCheck(this, Game);
-
-    this.openedCards = 0;
-    this.size = 4;
-    this.isOddMove = true;
-    this.firstCard = {};
-    this.isDebounce = false;
-    this.addEventListeners();
-  }
-
-  _createClass(Game, [{
-    key: "addCards",
-    value: function addCards() {
-      $cardBlock.innerHTML = "";
-      var x = this.size;
-      var shuffledArr = (0, _random.getShuffledArr)(_constants.IMAGES_NAMES).slice(0, x * x / 2);
-      var cardsArr = [];
-      shuffledArr.forEach(function (name, idx) {
-        var card = new _card.default(name).getCard();
-        card.setAttribute("data-pairId", idx);
-        cardsArr.push(card);
-        var copyCard = card.cloneNode(true);
-        cardsArr.push(copyCard);
-      });
-      var fragment = document.createDocumentFragment();
-      (0, _random.getShuffledArr)(cardsArr).forEach(function (card, idx) {
-        card.setAttribute("data-id", idx);
-        fragment.appendChild(card);
-      });
-      $cardBlock.appendChild(fragment);
-      $cardBlock.classList.add("size-".concat(x));
-    }
-  }, {
-    key: "onCardClick",
-    value: function onCardClick(e) {
-      var card = e.currentTarget;
-
-      if (card.classList.contains("done")) {
-        return;
-      }
-
-      if (this.isDebounce === true) {
-        return;
-      }
-
-      if (this.isOddMove) {
-        this.firstCard = card;
-        card.classList.add("done");
-        this.isOddMove = false;
-        this.makeDebounce(600);
-      } else {
-        card.classList.add("done");
-
-        if (card.getAttribute("data-pairid") !== this.firstCard.getAttribute("data-pairid")) {
-          this.hideBothCards(card);
-          this.makeDebounce(1200);
-        } else {
-          this.makeDebounce(600);
-          card.classList.add("opened");
-          this.firstCard.classList.add("opened");
-          this.openedCards += 2;
-
-          if (this.openedCards === this.size * this.size) {
-            this.onFinish();
-          }
-        }
-
-        this.isOddMove = true;
-      }
-    }
-  }, {
-    key: "onFinish",
-    value: function onFinish() {
-      setTimeout(function () {
-        playerWrap.classList.remove("js-hidden");
-        player.fullscreen.enter();
-        player.play();
-      }, 800);
-    }
-  }, {
-    key: "makeDebounce",
-    value: function makeDebounce(time) {
-      var _this = this;
-
-      this.isDebounce = true;
-      setTimeout(function () {
-        _this.isDebounce = false;
-      }, time);
-    }
-  }, {
-    key: "hideBothCards",
-    value: function hideBothCards(currentCard) {
-      var _this2 = this;
-
-      return setTimeout(function () {
-        currentCard.classList.remove("done");
-
-        _this2.firstCard.classList.remove("done");
-      }, 600);
-    }
-  }, {
-    key: "getCardById",
-    value: function getCardById(id) {
-      return $cardBlock.querySelectorAll(".card")[id];
-    }
-  }, {
-    key: "onSubmit",
-    value: function onSubmit(e) {
-      var _this3 = this;
-
-      e.preventDefault();
-      $sizesRadio.forEach(function (sizeRadio) {
-        if (sizeRadio.checked) {
-          _this3.size = +sizeRadio.value;
-        }
-      });
-      this.addCards();
-      this.addCardsEventListeners();
-      $menu.classList.add("hidden");
-    }
-  }, {
-    key: "addCardsEventListeners",
-    value: function addCardsEventListeners() {
-      var _this4 = this;
-
-      $cardBlock.querySelectorAll(".card").forEach(function (card) {
-        card.addEventListener("click", _this4.onCardClick.bind(_this4));
-      });
-    }
-  }, {
-    key: "addEventListeners",
-    value: function addEventListeners() {
-      $menuForm.addEventListener("submit", this.onSubmit.bind(this));
-    }
-  }]);
-
-  return Game;
-}();
-
-var _default = Game;
-exports.default = _default;
-
-},{"../modules/plyr.js":5,"../utils/random.js":6,"./card.js":2,"./constants.js":3}],5:[function(require,module,exports){
-(function (global){(function (){
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-(typeof navigator === "undefined" ? "undefined" : _typeof(navigator)) === "object" && function (global, factory) {
-  (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define('Plyr', factory) : (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Plyr = factory());
-}(void 0, function () {
-  'use strict';
+typeof navigator === "object" && (function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define('Plyr', factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Plyr = factory());
+}(this, (function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -417,9 +170,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   function _arrayLikeToArray(arr, len) {
     if (len == null || len > arr.length) len = arr.length;
 
-    for (var i = 0, arr2 = new Array(len); i < len; i++) {
-      arr2[i] = arr[i];
-    }
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
 
     return arr2;
   }
@@ -648,11 +399,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         return "ontouchstart" in document.documentElement;
       }
     }]), e;
-  }(); // ==========================================================================
+  }();
+
+  // ==========================================================================
   // Type checking utils
   // ==========================================================================
-
-
   var getConstructor$1 = function getConstructor(input) {
     return input !== null && typeof input !== 'undefined' ? input.constructor : null;
   };
@@ -773,8 +524,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     promise: isPromise,
     url: isUrl,
     empty: isEmpty$1
-  }; // ==========================================================================
+  };
 
+  // ==========================================================================
   var transitionEndEvent = function () {
     var element = document.createElement('span');
     var events = {
@@ -789,7 +541,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return is$1.string(type) ? events[type] : false;
   }(); // Force repaint of element
 
-
   function repaint(element, delay) {
     setTimeout(function () {
       try {
@@ -802,16 +553,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       } catch (e) {// Do nothing
       }
     }, delay);
-  } // ==========================================================================
+  }
+
+  // ==========================================================================
   // Browser sniffing
   // Unfortunately, due to mixed support, UA sniffing is required
   // ==========================================================================
-
-
   var browser = {
     isIE:
     /* @cc_on!@ */
-    !!document.documentMode,
+     !!document.documentMode,
     isEdge: window.navigator.userAgent.includes('Edge'),
     isWebkit: 'WebkitAppearance' in document.documentElement.style && !/Edge/.test(navigator.userAgent),
     isIPhone: /(iPhone|iPod)/gi.test(navigator.platform),
@@ -822,13 +573,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return JSON.parse(JSON.stringify(object));
   } // Get a nested value in an object
 
-
   function getDeep(object, path) {
     return path.split('.').reduce(function (obj, key) {
       return obj && obj[key];
     }, object);
   } // Deep extend destination object with N more objects
-
 
   function extend() {
     var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -885,7 +634,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   } // Set attributes
 
-
   function setAttributes(element, attributes) {
     if (!is$1.element(element) || is$1.empty(attributes)) {
       return;
@@ -907,7 +655,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   } // Create a DocumentFragment
 
-
   function createElement(type, attributes, text) {
     // Create a new <element>
     var element = document.createElement(type); // Set all passed attributes
@@ -925,7 +672,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return element;
   } // Inaert an element after another
 
-
   function insertAfter(element, target) {
     if (!is$1.element(element) || !is$1.element(target)) {
       return;
@@ -934,7 +680,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     target.parentNode.insertBefore(element, target.nextSibling);
   } // Insert a DocumentFragment
 
-
   function insertElement(type, parent, attributes, text) {
     if (!is$1.element(parent)) {
       return;
@@ -942,7 +687,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     parent.appendChild(createElement(type, attributes, text));
   } // Remove element(s)
-
 
   function removeElement(element) {
     if (is$1.nodeList(element) || is$1.array(element)) {
@@ -957,7 +701,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     element.parentNode.removeChild(element);
   } // Remove all child elements
 
-
   function emptyElement(element) {
     if (!is$1.element(element)) {
       return;
@@ -971,7 +714,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   } // Replace element
 
-
   function replaceElement(newChild, oldChild) {
     if (!is$1.element(oldChild) || !is$1.element(oldChild.parentNode) || !is$1.element(newChild)) {
       return null;
@@ -980,7 +722,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     oldChild.parentNode.replaceChild(newChild, oldChild);
     return newChild;
   } // Get an attribute object from a string selector
-
 
   function getAttributesFromSelector(sel, existingAttributes) {
     // For example:
@@ -1033,7 +774,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return extend(existing, attributes);
   } // Toggle hidden
 
-
   function toggleHidden(element, hidden) {
     if (!is$1.element(element)) {
       return;
@@ -1048,7 +788,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     element.hidden = hide;
   } // Mirror Element.classList.toggle, with IE compatibility for "force" argument
-
 
   function toggleClass(element, className, force) {
     if (is$1.nodeList(element)) {
@@ -1071,11 +810,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return false;
   } // Has class name
 
-
   function hasClass(element, className) {
     return is$1.element(element) && element.classList.contains(className);
   } // Element matches selector
-
 
   function matches$1(element, selector) {
     var _Element = Element,
@@ -1088,7 +825,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var method = prototype.matches || prototype.webkitMatchesSelector || prototype.mozMatchesSelector || prototype.msMatchesSelector || match;
     return method.call(element, selector);
   } // Closest ancestor element matching selector (also tests element itself)
-
 
   function closest(element, selector) {
     var _Element2 = Element,
@@ -1109,16 +845,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return method.call(element, selector);
   } // Find all elements
 
-
   function getElements(selector) {
     return this.elements.container.querySelectorAll(selector);
   } // Find a single element
 
-
   function getElement(selector) {
     return this.elements.container.querySelector(selector);
   } // Set focus and tab focus class
-
 
   function setFocus() {
     var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -1233,7 +966,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // Reduced motion iOS & MacOS setting
     // https://webkit.org/blog/7551/responsive-design-for-motion/
     reducedMotion: 'matchMedia' in window && window.matchMedia('(prefers-reduced-motion)').matches
-  }; // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+  };
+
+  // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
   // https://www.youtube.com/watch?v=NPM6172J22g
 
   var supportsPassiveListeners = function () {
@@ -1261,8 +996,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var toggle = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     var passive = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
-    var capture = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false; // Bail if no element, event, or callback
+    var capture = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
 
+    // Bail if no element, event, or callback
     if (!element || !('addEventListener' in element) || is$1.empty(event) || !is$1.function(callback)) {
       return;
     } // Allow multiple events
@@ -1298,7 +1034,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   } // Bind event handler
 
-
   function on(element) {
     var events = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     var callback = arguments.length > 2 ? arguments[2] : undefined;
@@ -1307,7 +1042,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     toggleListener.call(this, element, events, callback, true, passive, capture);
   } // Unbind event handler
 
-
   function off(element) {
     var events = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     var callback = arguments.length > 2 ? arguments[2] : undefined;
@@ -1315,7 +1049,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var capture = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
     toggleListener.call(this, element, events, callback, false, passive, capture);
   } // Bind once-only event handler
-
 
   function once(element) {
     var _this2 = this;
@@ -1338,12 +1071,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     toggleListener.call(this, element, events, onceCallback, true, passive, capture);
   } // Trigger event
 
-
   function triggerEvent(element) {
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     var bubbles = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var detail = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {}; // Bail if no element
+    var detail = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
+    // Bail if no element
     if (!is$1.element(element) || is$1.empty(type)) {
       return;
     } // Create and dispatch the event
@@ -1359,7 +1092,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     element.dispatchEvent(event);
   } // Unbind all cached event listeners
 
-
   function unbindListeners() {
     if (this && this.eventListeners) {
       this.eventListeners.forEach(function (item) {
@@ -1373,7 +1105,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   } // Run method when / if player is ready
 
-
   function ready() {
     var _this3 = this;
 
@@ -1381,13 +1112,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return _this3.ready ? setTimeout(resolve, 0) : on.call(_this3, _this3.elements.container, 'ready', resolve);
     }).then(function () {});
   }
+
   /**
    * Silence a Promise-like object.
    * This is useful for avoiding non-harmful, but potentially confusing "uncaught
    * play promise" rejection error messages.
    * @param  {Object} value An object that may or may not be `Promise`-like.
    */
-
 
   function silencePromise(value) {
     if (is$1.promise(value)) {
@@ -1403,7 +1134,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var ratio = is$1.array(input) ? input : input.split(':');
     return ratio.map(Number).every(is$1.number);
   }
-
   function reduceAspectRatio(ratio) {
     if (!is$1.array(ratio) || !ratio.every(is$1.number)) {
       return null;
@@ -1420,7 +1150,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var divider = getDivider(width, height);
     return [width / divider, height / divider];
   }
-
   function getAspectRatio(input) {
     var parse = function parse(ratio) {
       return validateRatio(ratio) ? ratio.split(':').map(Number) : null;
@@ -1448,7 +1177,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     return ratio;
   } // Set aspect ratio for responsive container
-
 
   function setAspectRatio(input) {
     if (!this.isVideo) {
@@ -1483,9 +1211,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       padding: padding,
       ratio: ratio
     };
-  } // ==========================================================================
+  }
 
-
+  // ==========================================================================
   var html5 = {
     getSources: function getSources() {
       var _this = this;
@@ -1614,7 +1342,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       this.debug.log('Cancelled network requests');
     }
-  }; // ==========================================================================
+  };
+
+  // ==========================================================================
 
   function dedupe(array) {
     if (!is$1.array(array)) {
@@ -1626,7 +1356,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   } // Get the closest value in an array
 
-
   function closest$1(array, value) {
     if (!is$1.array(array) || !array.length) {
       return null;
@@ -1635,13 +1364,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return array.reduce(function (prev, curr) {
       return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
     });
-  } // ==========================================================================
+  }
 
+  // ==========================================================================
 
   function generateId(prefix) {
     return "".concat(prefix, "-").concat(Math.floor(Math.random() * 10000));
   } // Format string
-
 
   function format(input) {
     for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -1657,7 +1386,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     });
   } // Get percentage
 
-
   function getPercentage(current, max) {
     if (current === 0 || max === 0 || Number.isNaN(current) || Number.isNaN(max)) {
       return 0;
@@ -1666,7 +1394,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return (current / max * 100).toFixed(2);
   } // Replace all occurances of a string in a string
 
-
   var replaceAll = function replaceAll() {
     var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     var find = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -1674,14 +1401,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return input.replace(new RegExp(find.toString().replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1'), 'g'), replace.toString());
   }; // Convert to title case
 
-
   var toTitleCase = function toTitleCase() {
     var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     return input.toString().replace(/\w\S*/g, function (text) {
       return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
     });
   }; // Convert string to pascalCase
-
 
   function toPascalCase() {
     var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -1696,7 +1421,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return replaceAll(string, ' ', '');
   } // Convert string to pascalCase
 
-
   function toCamelCase() {
     var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     var string = input.toString(); // Convert to pascal case
@@ -1706,7 +1430,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return string.charAt(0).toLowerCase() + string.slice(1);
   } // Remove HTML from a string
 
-
   function stripHTML(source) {
     var fragment = document.createDocumentFragment();
     var element = document.createElement('div');
@@ -1714,7 +1437,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     element.innerHTML = source;
     return fragment.firstChild.innerText;
   } // Like outerHTML, but also works for DocumentFragment
-
 
   function getHTML(element) {
     var wrapper = document.createElement('div');
@@ -1834,12 +1556,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }]);
 
     return Storage;
-  }(); // ==========================================================================
+  }();
+
+  // ==========================================================================
   // Fetch wrapper
   // Using XHR to avoid issues with older browsers
   // ==========================================================================
-
-
   function fetch(url) {
     var responseType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'text';
     return new Promise(function (resolve, reject) {
@@ -1872,8 +1594,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         reject(e);
       }
     });
-  } // ==========================================================================
+  }
 
+  // ==========================================================================
 
   function loadSprite(url, id) {
     if (!is$1.string(url)) {
@@ -1937,27 +1660,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         update(container, result);
       }).catch(function () {});
     }
-  } // ==========================================================================
+  }
 
+  // ==========================================================================
 
   var getHours = function getHours(value) {
     return Math.trunc(value / 60 / 60 % 60, 10);
   };
-
   var getMinutes = function getMinutes(value) {
     return Math.trunc(value / 60 % 60, 10);
   };
-
   var getSeconds = function getSeconds(value) {
     return Math.trunc(value % 60, 10);
   }; // Format time to UI friendly string
 
-
   function formatTime() {
     var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     var displayHours = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var inverted = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false; // Bail if the value isn't a number
+    var inverted = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
+    // Bail if the value isn't a number
     if (!is$1.number(time)) {
       return formatTime(undefined, displayHours, inverted);
     } // Format time component to add leading zero
@@ -2279,9 +2001,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // We have to bind to keyup otherwise Firefox triggers a click when a keydown event handler shifts focus
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1220143
     bindMenuItemShortcuts: function bindMenuItemShortcuts(menuItem, type) {
-      var _this2 = this; // Navigate through menus via arrow keys and space
+      var _this2 = this;
 
-
+      // Navigate through menus via arrow keys and space
       on.call(this, menuItem, 'keydown keyup', function (event) {
         // We only care about space and ⬆️ ⬇️️ ➡️
         if (![32, 38, 39, 40].includes(event.which)) {
@@ -2411,8 +2133,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // Format a time for display
     formatTime: function formatTime$1() {
       var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var inverted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false; // Bail if the value isn't a number
+      var inverted = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+      // Bail if the value isn't a number
       if (!is$1.number(time)) {
         return time;
       } // Always display hours if duration is over an hour
@@ -2425,8 +2148,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     updateTimeDisplay: function updateTimeDisplay() {
       var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      var inverted = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false; // Bail if there's no element to display or the value isn't a number
+      var inverted = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
+      // Bail if there's no element to display or the value isn't a number
       if (!is$1.element(target) || !is$1.number(time)) {
         return;
       } // eslint-disable-next-line no-param-reassign
@@ -2544,9 +2268,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Update hover tooltip for seeking
     updateSeekTooltip: function updateSeekTooltip(event) {
-      var _this5 = this; // Bail if setting not true
+      var _this5 = this;
 
-
+      // Bail if setting not true
       if (!this.config.tooltips.seek || !is$1.element(this.elements.inputs.seek) || !is$1.element(this.elements.display.seekTooltip) || this.duration === 0) {
         return;
       }
@@ -2723,9 +2447,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Set the quality menu
     setQualityMenu: function setQualityMenu(options) {
-      var _this6 = this; // Menu required
+      var _this6 = this;
 
-
+      // Menu required
       if (!is$1.element(this.elements.settings.panels.quality)) {
         return;
       }
@@ -2817,9 +2541,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // TODO: rework this to user the getter in the API?
     // Set a list of available captions languages
     setCaptionsMenu: function setCaptionsMenu() {
-      var _this7 = this; // Menu required
+      var _this7 = this;
 
-
+      // Menu required
       if (!is$1.element(this.elements.settings.panels.captions)) {
         return;
       } // TODO: Captions or language? Currently it's mixed
@@ -2865,9 +2589,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Set a list of available captions languages
     setSpeedMenu: function setSpeedMenu() {
-      var _this8 = this; // Menu required
+      var _this8 = this;
 
-
+      // Menu required
       if (!is$1.element(this.elements.settings.panels.speed)) {
         return;
       }
@@ -3331,9 +3055,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Insert controls
     inject: function inject() {
-      var _this11 = this; // Sprite
+      var _this11 = this;
 
-
+      // Sprite
       if (this.config.loadSprite) {
         var icon = controls.getIconUrl.call(this); // Only load external sprite using AJAX
 
@@ -3466,6 +3190,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
     }
   };
+
   /**
    * Parse a string to a URL object
    * @param {String} input - the URL to be parsed
@@ -3488,7 +3213,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return null;
     }
   } // Convert object to URLSearchParams
-
 
   function buildUrlParams(input) {
     var params = new URLSearchParams();
@@ -3646,8 +3370,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     toggle: function toggle(input) {
       var _this2 = this;
 
-      var passive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true; // If there's no full support
+      var passive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
+      // If there's no full support
       if (!this.supported.ui) {
         return;
       }
@@ -3782,8 +3507,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     getTracks: function getTracks() {
       var _this3 = this;
 
-      var update = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false; // Handle media or textTracks missing or null
-
+      var update = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      // Handle media or textTracks missing or null
       var tracks = Array.from((this.media || {}).textTracks || []); // For HTML5, use cache instead of current tracks when it exists (if captions.update is false)
       // Filter out removed tracks and tracks that aren't captions/subtitles (for example metadata)
 
@@ -3887,10 +3612,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         triggerEvent.call(this, this.media, 'cuechange');
       }
     }
-  }; // ==========================================================================
+  };
+
+  // ==========================================================================
   // Plyr default config
   // ==========================================================================
-
   var defaults$1 = {
     // Disable
     enabled: true,
@@ -4244,17 +3970,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       noCookie: false // Whether to use an alternative version of YouTube without cookies
 
     }
-  }; // ==========================================================================
+  };
+
+  // ==========================================================================
   // Plyr states
   // ==========================================================================
-
   var pip = {
     active: 'picture-in-picture',
     inactive: 'inline'
-  }; // ==========================================================================
+  };
+
+  // ==========================================================================
   // Plyr supported types and providers
   // ==========================================================================
-
   var providers = {
     html5: 'html5',
     youtube: 'youtube',
@@ -4281,11 +4009,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     return null;
-  } // ==========================================================================
+  }
+
+  // ==========================================================================
   // Console wrapper
   // ==========================================================================
-
-
   var noop = function noop() {};
 
   var Console = /*#__PURE__*/function () {
@@ -4328,9 +4056,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     function Fullscreen(player) {
       var _this = this;
 
-      _classCallCheck(this, Fullscreen); // Keep reference to parent
+      _classCallCheck(this, Fullscreen);
 
-
+      // Keep reference to parent
       this.player = player; // Get prefix
 
       this.prefix = Fullscreen.prefix;
@@ -4391,8 +4119,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "toggleFallback",
       value: function toggleFallback() {
-        var toggle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false; // Store or restore scroll position
+        var toggle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
+        // Store or restore scroll position
         if (toggle) {
           this.scrollPosition = {
             x: window.scrollX || 0,
@@ -4607,13 +4336,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }]);
 
     return Fullscreen;
-  }(); // ==========================================================================
+  }();
+
+  // ==========================================================================
   // Load image avoiding xhr/fetch CORS issues
   // Server status can't be obtained this way unfortunately, so this uses "naturalWidth" to determine if the image has loaded
   // By default it checks if it is at least 1px, but you can add a second argument to change this
   // ==========================================================================
-
-
   function loadImage(src) {
     var minWidth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
     return new Promise(function (resolve, reject) {
@@ -4650,10 +4379,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Setup the UI
     build: function build() {
-      var _this = this; // Re-attach media element listeners
+      var _this = this;
+
+      // Re-attach media element listeners
       // TODO: Use event bubbling?
-
-
       this.listeners.media(); // Don't setup interface if no support
 
       if (!this.supported.ui) {
@@ -4759,8 +4488,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     setPoster: function setPoster(poster) {
       var _this2 = this;
 
-      var passive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true; // Don't override if call is passive
+      var passive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
+      // Don't override if call is passive
       if (passive && this.poster) {
         return Promise.reject(new Error('Poster already set'));
       } // Set property synchronously to respect the call order
@@ -4798,9 +4528,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Check playing state
     checkPlaying: function checkPlaying(event) {
-      var _this3 = this; // Class hooks
+      var _this3 = this;
 
-
+      // Class hooks
       toggleClass(this.elements.container, this.config.classNames.playing, this.playing);
       toggleClass(this.elements.container, this.config.classNames.paused, this.paused);
       toggleClass(this.elements.container, this.config.classNames.stopped, this.stopped); // Set state
@@ -4847,9 +4577,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     // Migrate any custom properties from the media to the parent
     migrateStyles: function migrateStyles() {
-      var _this5 = this; // Loop through values (as they are the keys when the object is spread 🤔)
+      var _this5 = this;
 
-
+      // Loop through values (as they are the keys when the object is spread 🤔)
       Object.values(_objectSpread2({}, this.media.style)) // We're only fussed about Plyr specific properties
       .filter(function (key) {
         return !is$1.empty(key) && is$1.string(key) && key.startsWith('--plyr');
@@ -5316,6 +5046,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           // Update UI
           controls.updateSetting.call(player, 'speed'); // Save to storage
 
+
           player.storage.set({
             speed: player.speed
           });
@@ -5435,6 +5166,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           // Prevent the document click listener closing the menu
           event.stopPropagation();
           event.preventDefault();
+
           controls.toggleMenu.call(player, event);
         }, null, false); // Can't be passive as we're preventing default
         // Settings menu - keyboard toggle
@@ -5451,6 +5183,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           if (code === 13) {
             controls.focusFirstMenuItem.call(player, null, true);
+
             return;
           } // Prevent scroll
 
@@ -5579,6 +5312,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
 
             player.config.invertTime = !player.config.invertTime;
+
             controls.timeUpdate.call(player);
           });
         } // Volume
@@ -5660,9 +5394,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
   function createCommonjsModule(fn, module) {
-    return module = {
-      exports: {}
-    }, fn(module, module.exports), module.exports;
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
   var loadjs_umd = createCommonjsModule(function (module, exports) {
@@ -5957,8 +5689,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       return loadjs;
     });
-  }); // ==========================================================================
+  });
 
+  // ==========================================================================
   function loadScript(url) {
     return new Promise(function (resolve, reject) {
       loadjs_umd(url, {
@@ -6331,7 +6064,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         }, 0);
       }
     }
-  }; // ==========================================================================
+  };
+
+  // ==========================================================================
 
   function parseId$1(url) {
     if (is$1.empty(url)) {
@@ -6369,9 +6104,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   var youtube = {
     setup: function setup() {
-      var _this = this; // Add embed class for responsive
+      var _this = this;
 
-
+      // Add embed class for responsive
       toggleClass(this.elements.wrapper, this.config.classNames.embed, true); // Setup API
 
       if (is$1.object(window.YT) && is$1.function(window.YT.Player)) {
@@ -6737,8 +6472,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         }
       });
     }
-  }; // ==========================================================================
+  };
 
+  // ==========================================================================
   var media = {
     // Setup media
     setup: function setup() {
@@ -6866,9 +6602,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "ready",
       value: function ready() {
-        var _this3 = this; // Double check we're enabled
+        var _this3 = this;
 
-
+        // Double check we're enabled
         if (!this.enabled) {
           destroy(this);
         } // Start ticking our safety timer. If the whole advertisement
@@ -6898,9 +6634,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
        * mobile devices, this initialization is done as the result of a user action.
        */
       value: function setupIMA() {
-        var _this4 = this; // Create the container for our advertisements
+        var _this4 = this;
 
-
+        // Create the container for our advertisements
         this.elements.container = createElement('div', {
           class: this.player.config.classNames.ads
         });
@@ -6988,9 +6724,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "onAdsManagerLoaded",
       value: function onAdsManagerLoaded(event) {
-        var _this6 = this; // Load could occur after a source change (race condition)
+        var _this6 = this;
 
-
+        // Load could occur after a source change (race condition)
         if (!this.enabled) {
           return;
         } // Get the ads manager
@@ -7022,9 +6758,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "addCuePoints",
       value: function addCuePoints() {
-        var _this7 = this; // Add advertisement cue's within the time line if available
+        var _this7 = this;
 
-
+        // Add advertisement cue's within the time line if available
         if (!is$1.empty(this.cuePoints)) {
           this.cuePoints.forEach(function (cuePoint) {
             if (cuePoint !== 0 && cuePoint !== -1 && cuePoint < _this7.player.duration) {
@@ -7299,9 +7035,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "loadAds",
       value: function loadAds() {
-        var _this11 = this; // Tell our adsManager to go bye bye
+        var _this11 = this;
 
-
+        // Tell our adsManager to go bye bye
         this.managerPromise.then(function () {
           // Destroy our adsManager
           if (_this11.manager) {
@@ -7449,8 +7185,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           var _lineSplit = _slicedToArray(lineSplit, 1);
 
-          result.text = _lineSplit[0]; // If there's content in lineSplit[1], then we have sprites. If not, then it's just one frame per image
+          result.text = _lineSplit[0];
 
+          // If there's content in lineSplit[1], then we have sprites. If not, then it's just one frame per image
           if (lineSplit[1]) {
             var _lineSplit$1$split = lineSplit[1].split(',');
 
@@ -7522,9 +7259,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     _createClass(PreviewThumbnails, [{
       key: "load",
       value: function load() {
-        var _this = this; // Toggle the regular seek tooltip
+        var _this = this;
 
-
+        // Toggle the regular seek tooltip
         if (this.player.elements.display.seekTooltip) {
           this.player.elements.display.seekTooltip.hidden = this.enabled;
         }
@@ -7717,9 +7454,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "listeners",
       value: function listeners() {
-        var _this5 = this; // Hide thumbnail preview - on mouse click, mouse leave (in listeners.js for now), and video play/seek. All four are required, e.g., for buffering
+        var _this5 = this;
 
-
+        // Hide thumbnail preview - on mouse click, mouse leave (in listeners.js for now), and video play/seek. All four are required, e.g., for buffering
         this.player.on('play', function () {
           _this5.toggleThumbContainer(false, true);
         });
@@ -7884,9 +7621,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "removeOldImages",
       value: function removeOldImages(currentImage) {
-        var _this8 = this; // Get a list of all images, convert it from a DOM list to an array
+        var _this8 = this;
 
-
+        // Get a list of all images, convert it from a DOM list to an array
         Array.from(this.currentImageContainer.children).forEach(function (image) {
           if (image.tagName.toLowerCase() !== 'img') {
             return;
@@ -8315,6 +8052,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }, true);
     }
   };
+
   /**
    * Returns a number whose value is limited to the given range.
    *
@@ -8327,16 +8065,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * @returns A number in the range [min, max]
    * @type Number
    */
-
   function clamp() {
     var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 255;
     return Math.min(Math.max(input, min), max);
-  } // TODO: Use a WeakMap for private globals
+  }
+
+  // TODO: Use a WeakMap for private globals
   // const globals = new WeakMap();
   // Plyr instance
-
 
   var Plyr = /*#__PURE__*/function () {
     function Plyr(target, options) {
@@ -9605,27 +9343,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }();
 
   Plyr.defaults = cloneDeep(defaults$1);
+
   return Plyr;
-});
 
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{}],6:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getShuffledArr = void 0;
-
-var getShuffledArr = function getShuffledArr(arr) {
-  return arr.sort(function () {
-    return Math.random() - 0.5;
-  });
-};
-
-exports.getShuffledArr = getShuffledArr;
-
-},{}]},{},[1])
-
-//# sourceMappingURL=main.js.map
+})));

@@ -1,14 +1,32 @@
 import {IMAGES_NAMES} from './constants.js';
 import {getShuffledArr} from '../utils/random.js';
+import Plyr from '../modules/plyr.js';
 import Card from './card.js';
 
 const $menu = document.getElementById(`menu`);
 const $menuForm = document.getElementById(`menu-form`);
 const $sizesRadio = $menuForm.querySelectorAll(`input[name='fieldSize']`);
 const $cardBlock = document.getElementById(`card-block`);
+const $playerWrap = document.querySelector(`.player-wrap`);
+
+const player = new Plyr(`#player`);
+player.on(`ended`, function () {
+  player.fullscreen.exit();
+});
+
+const playerWrap = document.querySelector(`.player-wrap`);
+const play = document.getElementById(`play`);
+const exit = document.getElementById(`exit`);
+
+// play.addEventListener('click', () => {
+//   playerWrap.classList.remove(`js-hidden`);
+//   player.fullscreen.enter();
+//   player.play();
+// });
 
 class Game {
   constructor() {
+    this.openedCards = 0;
     this.size = 4;
     this.isOddMove = true;
     this.firstCard = {};
@@ -64,9 +82,21 @@ class Game {
         this.makeDebounce(600);
         card.classList.add(`opened`);
         this.firstCard.classList.add(`opened`);
+        this.openedCards += 2;
+        if (this.openedCards === this.size * this.size) {
+          this.onFinish();
+        }
       }
       this.isOddMove = true;
     }
+  }
+
+  onFinish() {
+    setTimeout(() => {
+      playerWrap.classList.remove(`js-hidden`);
+      player.fullscreen.enter();
+      player.play();
+    }, 800);
   }
 
   makeDebounce(time) {
