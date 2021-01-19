@@ -11,23 +11,24 @@
     <div class="menu" id="menu">
       <div class="menu__container">
         <form class="menu__form" id="menu-form">
-          <input type="radio" id="size-4" name="fieldSize" value="4" checked>
+          <p class="menu__title">ПОИСК КАРТОЧЕК</p>
+          <p class="menu__subtitle">Размер поля:</p>
+          <input type="radio" class="menu__radio visually-hidden" id="size-4" name="fieldSize" value="4" checked>
           <label for="size-4" class="menu__label">4 Х 4</label>
-          <input type="radio" id="size-6" name="fieldSize" value="6">
+          <input type="radio" class="menu__radio visually-hidden" id="size-6" name="fieldSize" value="6">
           <label for="size-6" class="menu__label">6 Х 6</label>
-          <input type="radio" id="size-8" name="fieldSize" value="8">
-          <label for="size-8" class="menu__label">8 Х 8</label>
-          <button id="size-submit" type="submit">Старт</button>
+          <!-- <input type="radio" class="menu__radio visually-hidden" id="size-8" name="fieldSize" value="8">
+          <label for="size-8" class="menu__label">8 Х 8</label> -->
+          <button class="menu__submit" id="size-submit" type="submit">СТАРТ</button>
         </form>
       </div>
     </div>
 
+    <h2 class="page-title">Найди все пары карточек</h2>
+
     <div class="card-block" id="card-block">
 
     </div>
-
-    <button id='play'>Play</button>
-    <button id='exit'>Exit</button>
 
     <!-- <div class="player-wrap js-hidden">
       <video id="player" playsinline controls data-poster="">
@@ -36,22 +37,25 @@
       </video>
     </div> -->
 
-    <div class="player-wrap">
+    <!-- <div class="player-wrap">
       <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="6NDYf3RZ1eY"></div>
-    </div>
-
-
-
-    <!-- <div class="player-wrap js-hidde">
-      <div class="plyr__video-embed" id="player">
-        <iframe
-          src="https://www.youtube.com/watch?v=6NDYf3RZ1eY?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-          allowfullscreen
-          allowtransparency
-          allow="autoplay"
-        ></iframe>
-      </div>
     </div> -->
+
+
+
+    <div class="player-wrap js-hidden">
+      <div class="player-content">
+        <div class="plyr__video-embed" id="player">
+          <iframe
+            src="https://www.youtube.com/embed/6NDYf3RZ1eY?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+            allowfullscreen
+            allowtransparency
+            allow="autoplay"
+          ></iframe>
+        </div>
+        <button class="player-new-game">Новая игра</button>
+      </div>
+    </div>
 
     <template id="card">
       <div class="card">

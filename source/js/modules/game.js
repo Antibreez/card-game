@@ -8,15 +8,20 @@ const $menuForm = document.getElementById(`menu-form`);
 const $sizesRadio = $menuForm.querySelectorAll(`input[name='fieldSize']`);
 const $cardBlock = document.getElementById(`card-block`);
 const $playerWrap = document.querySelector(`.player-wrap`);
+const $newGameBtn = document.querySelector(`.player-new-game`);
 
-const player = new Plyr(`#player`);
-player.on(`ended`, function () {
-  player.fullscreen.exit();
-});
+// const player = new Plyr(`#player`, {
+//   clickToPlay: true,
+// });
+// player.on(`ended`, function () {
+//   if (player.fullscreen.active) {
+//     player.fullscreen.exit();
+//   }
+// });
 
-const playerWrap = document.querySelector(`.player-wrap`);
-const play = document.getElementById(`play`);
-const exit = document.getElementById(`exit`);
+// const playerWrap = document.querySelector(`.player-wrap`);
+// const play = document.getElementById(`play`);
+// const exit = document.getElementById(`exit`);
 
 // play.addEventListener('click', () => {
 //   playerWrap.classList.remove(`js-hidden`);
@@ -32,6 +37,26 @@ class Game {
     this.firstCard = {};
     this.isDebounce = false;
     this.addEventListeners();
+    this.player = {};
+  }
+
+  addPlayer() {
+    this.player = new Plyr(`#player`, {
+      clickToPlay: true,
+    });
+    console.log(this.player);
+
+    this.player.on(`ended`, () => {
+      console.log(this.player);
+      if (this.player.fullscreen.active) {
+        this.player.fullscreen.exit();
+      }
+    });
+  }
+
+  removePlayer() {
+    this.player.destroy();
+    this.player = {};
   }
 
   addCards() {
@@ -55,6 +80,25 @@ class Game {
 
     $cardBlock.appendChild(fragment);
     $cardBlock.classList.add(`size-${x}`);
+  }
+
+  removeCards() {
+    $cardBlock.querySelectorAll(`.card`).forEach((card) => {
+      card.remove();
+    });
+  }
+
+  onNewGameClick() {
+    this.removeCardsEventListeners();
+    this.removeCards();
+    $playerWrap.classList.add(`js-hidden`);
+    $menu.classList.remove(`js-hidden`);
+    this.removePlayer();
+    this.openedCards = 0;
+    this.size = 4;
+    this.isOddMove = true;
+    this.firstCard = {};
+    this.isDebounce = false;
   }
 
   onCardClick(e) {
@@ -93,9 +137,9 @@ class Game {
 
   onFinish() {
     setTimeout(() => {
-      playerWrap.classList.remove(`js-hidden`);
-      player.fullscreen.enter();
-      player.play();
+      $playerWrap.classList.remove(`js-hidden`);
+      this.player.fullscreen.enter();
+      this.player.play();
     }, 800);
   }
 
@@ -128,7 +172,8 @@ class Game {
 
     this.addCards();
     this.addCardsEventListeners();
-    $menu.classList.add(`hidden`);
+    $menu.classList.add(`js-hidden`);
+    this.addPlayer();
   }
 
   addCardsEventListeners() {
@@ -137,8 +182,15 @@ class Game {
     });
   }
 
+  removeCardsEventListeners() {
+    $cardBlock.querySelectorAll(`.card`).forEach((card) => {
+      card.removeEventListener(`click`, this.onCardClick.bind(this));
+    });
+  }
+
   addEventListeners() {
     $menuForm.addEventListener(`submit`, this.onSubmit.bind(this));
+    $newGameBtn.addEventListener(`click`, this.onNewGameClick.bind(this));
   }
 }
 

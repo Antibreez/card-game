@@ -1,5 +1,30 @@
 .player-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow-y: auto;
+
+  &::after {
+    content: "";
+    width: 0;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+
   &.js-hidden {
     display: none;
   }
+}
+
+.player-content {
+  display: inline-block;
+  width: 90%;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  vertical-align: middle;
 }

@@ -84,13 +84,18 @@ var $menuForm = document.getElementById("menu-form");
 var $sizesRadio = $menuForm.querySelectorAll("input[name='fieldSize']");
 var $cardBlock = document.getElementById("card-block");
 var $playerWrap = document.querySelector(".player-wrap");
-var player = new _plyr.default("#player");
-player.on("ended", function () {
-  player.fullscreen.exit();
-});
-var playerWrap = document.querySelector(".player-wrap");
-var play = document.getElementById("play");
-var exit = document.getElementById("exit"); // play.addEventListener('click', () => {
+var $newGameBtn = document.querySelector(".player-new-game"); // const player = new Plyr(`#player`, {
+//   clickToPlay: true,
+// });
+// player.on(`ended`, function () {
+//   if (player.fullscreen.active) {
+//     player.fullscreen.exit();
+//   }
+// });
+// const playerWrap = document.querySelector(`.player-wrap`);
+// const play = document.getElementById(`play`);
+// const exit = document.getElementById(`exit`);
+// play.addEventListener('click', () => {
 //   playerWrap.classList.remove(`js-hidden`);
 //   player.fullscreen.enter();
 //   player.play();
@@ -106,9 +111,33 @@ var Game = /*#__PURE__*/function () {
     this.firstCard = {};
     this.isDebounce = false;
     this.addEventListeners();
+    this.player = {};
   }
 
   _createClass(Game, [{
+    key: "addPlayer",
+    value: function addPlayer() {
+      var _this = this;
+
+      this.player = new _plyr.default("#player", {
+        clickToPlay: true
+      });
+      console.log(this.player);
+      this.player.on("ended", function () {
+        console.log(_this.player);
+
+        if (_this.player.fullscreen.active) {
+          _this.player.fullscreen.exit();
+        }
+      });
+    }
+  }, {
+    key: "removePlayer",
+    value: function removePlayer() {
+      this.player.destroy();
+      this.player = {};
+    }
+  }, {
     key: "addCards",
     value: function addCards() {
       $cardBlock.innerHTML = "";
@@ -129,6 +158,27 @@ var Game = /*#__PURE__*/function () {
       });
       $cardBlock.appendChild(fragment);
       $cardBlock.classList.add("size-".concat(x));
+    }
+  }, {
+    key: "removeCards",
+    value: function removeCards() {
+      $cardBlock.querySelectorAll(".card").forEach(function (card) {
+        card.remove();
+      });
+    }
+  }, {
+    key: "onNewGameClick",
+    value: function onNewGameClick() {
+      this.removeCardsEventListeners();
+      this.removeCards();
+      $playerWrap.classList.add("js-hidden");
+      $menu.classList.remove("js-hidden");
+      this.removePlayer();
+      this.openedCards = 0;
+      this.size = 4;
+      this.isOddMove = true;
+      this.firstCard = {};
+      this.isDebounce = false;
     }
   }, {
     key: "onCardClick",
@@ -171,31 +221,35 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "onFinish",
     value: function onFinish() {
+      var _this2 = this;
+
       setTimeout(function () {
-        playerWrap.classList.remove("js-hidden");
-        player.fullscreen.enter();
-        player.play();
+        $playerWrap.classList.remove("js-hidden");
+
+        _this2.player.fullscreen.enter();
+
+        _this2.player.play();
       }, 800);
     }
   }, {
     key: "makeDebounce",
     value: function makeDebounce(time) {
-      var _this = this;
+      var _this3 = this;
 
       this.isDebounce = true;
       setTimeout(function () {
-        _this.isDebounce = false;
+        _this3.isDebounce = false;
       }, time);
     }
   }, {
     key: "hideBothCards",
     value: function hideBothCards(currentCard) {
-      var _this2 = this;
+      var _this4 = this;
 
       return setTimeout(function () {
         currentCard.classList.remove("done");
 
-        _this2.firstCard.classList.remove("done");
+        _this4.firstCard.classList.remove("done");
       }, 600);
     }
   }, {
@@ -206,31 +260,42 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "onSubmit",
     value: function onSubmit(e) {
-      var _this3 = this;
+      var _this5 = this;
 
       e.preventDefault();
       $sizesRadio.forEach(function (sizeRadio) {
         if (sizeRadio.checked) {
-          _this3.size = +sizeRadio.value;
+          _this5.size = +sizeRadio.value;
         }
       });
       this.addCards();
       this.addCardsEventListeners();
-      $menu.classList.add("hidden");
+      $menu.classList.add("js-hidden");
+      this.addPlayer();
     }
   }, {
     key: "addCardsEventListeners",
     value: function addCardsEventListeners() {
-      var _this4 = this;
+      var _this6 = this;
 
       $cardBlock.querySelectorAll(".card").forEach(function (card) {
-        card.addEventListener("click", _this4.onCardClick.bind(_this4));
+        card.addEventListener("click", _this6.onCardClick.bind(_this6));
+      });
+    }
+  }, {
+    key: "removeCardsEventListeners",
+    value: function removeCardsEventListeners() {
+      var _this7 = this;
+
+      $cardBlock.querySelectorAll(".card").forEach(function (card) {
+        card.removeEventListener("click", _this7.onCardClick.bind(_this7));
       });
     }
   }, {
     key: "addEventListeners",
     value: function addEventListeners() {
       $menuForm.addEventListener("submit", this.onSubmit.bind(this));
+      $newGameBtn.addEventListener("click", this.onNewGameClick.bind(this));
     }
   }]);
 
