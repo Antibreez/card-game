@@ -32,3 +32,16 @@ export const IMAGES_NAMES = [
   `tv-screen.svg`,
   `umbrella.svg`
 ];
+
+export const CARTOONS_ID = [
+  `6NDYf3RZ1eY`,
+  `ba62uuv-5Dc`,
+  `yltlJEdSAHw`,
+  `URH0aKA1LiY`,
+  `tyx7UL-Uolw`,
+  `Qota928VTXw`,
+  `WjoDEQqyTig`,
+  `Po7RpGzFEIY`,
+  `uJJ2c0FFt9Y`,
+  `nUCf4_cDXwg`,
+];

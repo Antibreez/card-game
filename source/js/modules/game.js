@@ -1,4 +1,5 @@
 import {IMAGES_NAMES} from './constants.js';
+import {CARTOONS_ID} from './constants.js';
 import {getShuffledArr} from '../utils/random.js';
 import Plyr from '../modules/plyr.js';
 import Card from './card.js';
@@ -9,6 +10,9 @@ const $sizesRadio = $menuForm.querySelectorAll(`input[name='fieldSize']`);
 const $cardBlock = document.getElementById(`card-block`);
 const $playerWrap = document.querySelector(`.player-wrap`);
 const $newGameBtn = document.querySelector(`.player-new-game`);
+const $playerIframe = $playerWrap.querySelector(`iframe`);
+
+
 
 // const player = new Plyr(`#player`, {
 //   clickToPlay: true,
@@ -38,13 +42,36 @@ class Game {
     this.isDebounce = false;
     this.addEventListeners();
     this.player = {};
+    this.cartoonIds = [];
+  }
+
+  getCartoonId() {
+    let cartoonId = ``;
+    while (true) {
+      cartoonId = CARTOONS_ID[Math.floor(Math.random() * CARTOONS_ID.length)];
+      if (this.cartoonIds.indexOf(cartoonId) === -1) {
+        break;
+      } else if (this.cartoonIds.length === CARTOONS_ID.length) {
+        this.cartoonIds = [];
+        break;
+      }
+    }
+
+    this.cartoonIds.push(cartoonId);
+    return cartoonId;
   }
 
   addPlayer() {
+    $playerIframe.setAttribute(
+      `src`,
+      `https://www.youtube.com/embed/`
+      + this.getCartoonId()
+      + `?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
+    )
+
     this.player = new Plyr(`#player`, {
       clickToPlay: true,
     });
-    console.log(this.player);
 
     this.player.on(`ended`, () => {
       console.log(this.player);

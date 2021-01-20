@@ -51,9 +51,11 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.IMAGES_NAMES = void 0;
+exports.CARTOONS_ID = exports.IMAGES_NAMES = void 0;
 var IMAGES_NAMES = ["apple.svg", "ball.svg", "banana.svg", "cake.svg", "car.svg", "cat.svg", "cloud.svg", "dog.svg", "duck.svg", "earth.svg", "ferris.svg", "frig.svg", "flag.svg", "frog.svg", "hat.svg", "hot-dog.svg", "house.svg", "leaf.svg", "lightning.svg", "moon.svg", "mustache.svg", "rainbow.svg", "road.svg", "rocket.svg", "ship.svg", "smile.svg", "star.svg", "sun.svg", "tree.svg", "t-shirt.svg", "tv-screen.svg", "umbrella.svg"];
 exports.IMAGES_NAMES = IMAGES_NAMES;
+var CARTOONS_ID = ["6NDYf3RZ1eY", "ba62uuv-5Dc", "yltlJEdSAHw", "URH0aKA1LiY", "tyx7UL-Uolw", "Qota928VTXw", "WjoDEQqyTig", "Po7RpGzFEIY", "uJJ2c0FFt9Y", "nUCf4_cDXwg"];
+exports.CARTOONS_ID = CARTOONS_ID;
 
 },{}],4:[function(require,module,exports){
 "use strict";
@@ -84,7 +86,8 @@ var $menuForm = document.getElementById("menu-form");
 var $sizesRadio = $menuForm.querySelectorAll("input[name='fieldSize']");
 var $cardBlock = document.getElementById("card-block");
 var $playerWrap = document.querySelector(".player-wrap");
-var $newGameBtn = document.querySelector(".player-new-game"); // const player = new Plyr(`#player`, {
+var $newGameBtn = document.querySelector(".player-new-game");
+var $playerIframe = $playerWrap.querySelector("iframe"); // const player = new Plyr(`#player`, {
 //   clickToPlay: true,
 // });
 // player.on(`ended`, function () {
@@ -112,17 +115,37 @@ var Game = /*#__PURE__*/function () {
     this.isDebounce = false;
     this.addEventListeners();
     this.player = {};
+    this.cartoonIds = [];
   }
 
   _createClass(Game, [{
+    key: "getCartoonId",
+    value: function getCartoonId() {
+      var cartoonId = "";
+
+      while (true) {
+        cartoonId = _constants.CARTOONS_ID[Math.floor(Math.random() * _constants.CARTOONS_ID.length)];
+
+        if (this.cartoonIds.indexOf(cartoonId) === -1) {
+          break;
+        } else if (this.cartoonIds.length === _constants.CARTOONS_ID.length) {
+          this.cartoonIds = [];
+          break;
+        }
+      }
+
+      this.cartoonIds.push(cartoonId);
+      return cartoonId;
+    }
+  }, {
     key: "addPlayer",
     value: function addPlayer() {
       var _this = this;
 
+      $playerIframe.setAttribute("src", "https://www.youtube.com/embed/" + this.getCartoonId() + "?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1");
       this.player = new _plyr.default("#player", {
         clickToPlay: true
       });
-      console.log(this.player);
       this.player.on("ended", function () {
         console.log(_this.player);
 
