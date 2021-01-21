@@ -161,14 +161,10 @@ var Game = /*#__PURE__*/function () {
       //   + `?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
       // )
 
-      console.log(this.player);
       this.player = new _plyr.default("#player", {
         clickToPlay: true
       });
-      console.log(this.player);
       this.player.on("ended", function () {
-        console.log(_this.player);
-
         if (_this.player.fullscreen.active) {
           _this.player.fullscreen.exit();
         }

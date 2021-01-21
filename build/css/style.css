@@ -3172,3 +3172,20 @@ input:invalid {
   margin-bottom: 50px;
   vertical-align: middle;
 }
+
+.player-new-game {
+  padding: 20px;
+  margin-top: 20px;
+  color: #fff;
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid #fff;
+  border-radius: 10px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.player-new-game:hover, .player-new-game:active {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.2);
+}

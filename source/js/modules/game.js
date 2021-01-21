@@ -89,15 +89,11 @@ class Game {
     //   + `?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
     // )
 
-    console.log(this.player);
-
     this.player = new Plyr(`#player`, {
       clickToPlay: true,
     });
-    console.log(this.player);
 
     this.player.on(`ended`, () => {
-      console.log(this.player);
       if (this.player.fullscreen.active) {
         this.player.fullscreen.exit();
       }
