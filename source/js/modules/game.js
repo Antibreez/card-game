@@ -9,8 +9,9 @@ const $menuForm = document.getElementById(`menu-form`);
 const $sizesRadio = $menuForm.querySelectorAll(`input[name='fieldSize']`);
 const $cardBlock = document.getElementById(`card-block`);
 const $playerWrap = document.querySelector(`.player-wrap`);
+const $playerContainer = document.querySelector(`.player-container`);
 const $newGameBtn = document.querySelector(`.player-new-game`);
-const $playerIframe = $playerWrap.querySelector(`iframe`);
+//const $playerIframe = $playerWrap.querySelector(`iframe`);
 
 
 
@@ -62,16 +63,38 @@ class Game {
   }
 
   addPlayer() {
-    $playerIframe.setAttribute(
+    const fragment = document.createDocumentFragment();
+    const player = document.createElement(`div`);
+    player.classList.add(`plyr__video-embed`);
+    player.setAttribute(`id`, `player`);
+    const iframe = document.createElement(`iframe`);
+    iframe.setAttribute(
       `src`,
       `https://www.youtube.com/embed/`
       + this.getCartoonId()
       + `?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
-    )
+    );
+    iframe.setAttribute(`allowfullscreen`, ``);
+    iframe.setAttribute(`allowtransparency`, ``);
+    iframe.setAttribute(`allow`, `autoplay`);
+    player.appendChild(iframe);
+    fragment.appendChild(player);
+    $playerContainer.appendChild(player);
+
+
+    // $playerIframe.setAttribute(
+    //   `src`,
+    //   `https://www.youtube.com/embed/`
+    //   + this.getCartoonId()
+    //   + `?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
+    // )
+
+    console.log(this.player);
 
     this.player = new Plyr(`#player`, {
       clickToPlay: true,
     });
+    console.log(this.player);
 
     this.player.on(`ended`, () => {
       console.log(this.player);
@@ -83,7 +106,7 @@ class Game {
 
   removePlayer() {
     this.player.destroy();
-    this.player = {};
+    $playerContainer.innerHTML = ``;
   }
 
   addCards() {

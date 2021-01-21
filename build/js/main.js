@@ -86,8 +86,9 @@ var $menuForm = document.getElementById("menu-form");
 var $sizesRadio = $menuForm.querySelectorAll("input[name='fieldSize']");
 var $cardBlock = document.getElementById("card-block");
 var $playerWrap = document.querySelector(".player-wrap");
-var $newGameBtn = document.querySelector(".player-new-game");
-var $playerIframe = $playerWrap.querySelector("iframe"); // const player = new Plyr(`#player`, {
+var $playerContainer = document.querySelector(".player-container");
+var $newGameBtn = document.querySelector(".player-new-game"); //const $playerIframe = $playerWrap.querySelector(`iframe`);
+// const player = new Plyr(`#player`, {
 //   clickToPlay: true,
 // });
 // player.on(`ended`, function () {
@@ -142,10 +143,29 @@ var Game = /*#__PURE__*/function () {
     value: function addPlayer() {
       var _this = this;
 
-      $playerIframe.setAttribute("src", "https://www.youtube.com/embed/" + this.getCartoonId() + "?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1");
+      var fragment = document.createDocumentFragment();
+      var player = document.createElement("div");
+      player.classList.add("plyr__video-embed");
+      player.setAttribute("id", "player");
+      var iframe = document.createElement("iframe");
+      iframe.setAttribute("src", "https://www.youtube.com/embed/" + this.getCartoonId() + "?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1");
+      iframe.setAttribute("allowfullscreen", "");
+      iframe.setAttribute("allowtransparency", "");
+      iframe.setAttribute("allow", "autoplay");
+      player.appendChild(iframe);
+      fragment.appendChild(player);
+      $playerContainer.appendChild(player); // $playerIframe.setAttribute(
+      //   `src`,
+      //   `https://www.youtube.com/embed/`
+      //   + this.getCartoonId()
+      //   + `?origin=window.location.host;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1`
+      // )
+
+      console.log(this.player);
       this.player = new _plyr.default("#player", {
         clickToPlay: true
       });
+      console.log(this.player);
       this.player.on("ended", function () {
         console.log(_this.player);
 
@@ -158,7 +178,7 @@ var Game = /*#__PURE__*/function () {
     key: "removePlayer",
     value: function removePlayer() {
       this.player.destroy();
-      this.player = {};
+      $playerContainer.innerHTML = "";
     }
   }, {
     key: "addCards",
